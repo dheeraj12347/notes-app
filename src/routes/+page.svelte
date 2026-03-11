@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { notes, loading, search, page, sortBy, order, isOnline, syncing } from "../stores/notesStore";
+	import { notes, loading, search, page, sortBy, order, isOnline, syncing, hasMore } from "../stores/notesStore";
 	import { getNotes } from "../lib/api";
 
 	import NoteCard from "../components/NoteCard.svelte";
@@ -12,8 +12,14 @@
 	import ThemeSwitcher from "../components/ThemeSwitcher.svelte";
 	import LoadingSkeleton from "../components/LoadingSkeleton.svelte";
 
-	async function loadNotes() {
+	async function loadNotes(reset = false) {
 		try {
+			if (reset) {
+				page.set(1);
+				notes.set([]);
+				hasMore.set(true);
+			}
+
 			loading.set(true);
 
 			const data = await getNotes(
@@ -23,24 +29,41 @@
 				$order
 			);
 
-			notes.set(data);
+			if (data.length < 20) {
+				hasMore.set(false);
+			} else {
+				hasMore.set(true);
+			}
+
+			if ($page === 1) {
+				notes.set(data);
+			} else {
+				notes.update(n => {
+					// Filter out duplicates (like optimistic UI temp notes) just in case
+					const existingIds = new Set(n.map(note => note.id));
+					const newUniqueNotes = data.filter(note => !existingIds.has(note.id));
+					return [...n, ...newUniqueNotes];
+				});
+			}
 
 		} catch (error) {
-
 			console.error("Error fetching notes:", error);
-
 		} finally {
-
 			loading.set(false);
-
 		}
 	}
 
-	onMount(loadNotes);
+	onMount(() => loadNotes(true));
 
-	// reactive reload when state changes
-	$: if ($page !== undefined || $search !== undefined || $sortBy || $order) {
-		loadNotes();
+	// reactive reload when state changes (only on dependencies that require a reset)
+	$: if ($search !== undefined || $sortBy || $order) {
+		// Svelte's reactivity can fire before onMount, so ensure we are ready
+		loadNotes(true);
+	}
+
+	// separate reactive block for pagination so it doesn't trigger a reset
+	$: if ($page > 1) {
+		loadNotes(false);
 	}
 
 	// pinned notes always appear first

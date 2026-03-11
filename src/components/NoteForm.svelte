@@ -32,9 +32,17 @@
 			const realNote = await createNote(newNote);
 
 			// 3. Swap temp note for real database note silently
-			notes.update((n) =>
-				n.map((item) => (item.id === tempId ? realNote : item))
-			);
+			notes.update((n) => {
+				// Check if the realnote was already fetched by infinite scroll
+				const alreadyExists = n.some(item => item.id === realNote.id);
+				
+				return n.map((item) => {
+					if (item.id === tempId) {
+						return alreadyExists ? null : realNote;
+					}
+					return item;
+				}).filter(Boolean) as import("../types/note").Note[];
+			});
 		} catch (error) {
 			console.error("Failed to create note API", error);
 		}
