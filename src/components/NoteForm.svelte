@@ -5,6 +5,15 @@
 	let title = "";
 	let content = "";
 	let isSubmitting = false;
+	
+	let titleInput: HTMLInputElement;
+
+	function handleKeydown(e: KeyboardEvent) {
+		if (e.ctrlKey && (e.key === "n" || e.key === "N")) {
+			e.preventDefault();
+			titleInput?.focus();
+		}
+	}
 
 	async function submit() {
 		if (!title.trim() || isSubmitting) return;
@@ -49,6 +58,8 @@
 	}
 </script>
 
+<svelte:window on:keydown={handleKeydown} />
+
 <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow mb-6">
 
 	<form
@@ -61,6 +72,7 @@
 			placeholder="Title"
 			required
 			maxlength="100"
+			bind:this={titleInput}
 			bind:value={title}
 		/>
 

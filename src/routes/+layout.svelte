@@ -25,15 +25,6 @@
 			localStorage.setItem("accentColor", color);
 		});
 
-		window.addEventListener("keydown",(e)=>{
-
-			if(e.ctrlKey && e.key==="n"){
-				e.preventDefault();
-				document.querySelector("input")?.focus();
-			}
-
-		})
-
 	});
 </script>
 
