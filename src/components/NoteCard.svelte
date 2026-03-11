@@ -12,7 +12,7 @@
 	let showEdit = false;
 
 	let showToast = false;
-	let deletedNote: Note | null = null;
+	let isSoftDeleted = false;
 
 	async function togglePin() {
 		const newPinnedState = !note.pinned;
@@ -43,23 +43,26 @@
 	}
 
 	async function remove() {
-
-		deletedNote = note;
-
-		notes.update(n => n.filter(item => item.id !== note.id));
-
+		confirmDelete = false;
+		isSoftDeleted = true;
 		showToast = true;
+	}
 
-		setTimeout(async () => {
-			if (deletedNote) {
-				await deleteNote(note.id);
-				deletedNote = null;
-			}
-		}, 10000);
+	function handleUndo() {
+		isSoftDeleted = false;
+		showToast = false;
+	}
 
+	async function finalizeDelete() {
+		if (isSoftDeleted) {
+			showToast = false;
+			await deleteNote(note.id);
+			notes.update(n => n.filter(item => item.id !== note.id));
+		}
 	}
 </script>
 
+{#if !isSoftDeleted}
 <div class="p-4 bg-white dark:bg-gray-800 rounded-xl shadow hover:shadow-lg transition dark:border dark:border-white">
 
 	<div class="flex justify-between items-center">
@@ -89,7 +92,7 @@
 	<div class="flex gap-4 mt-4">
 
 		<button
-			class="text-blue-500 hover:underline"
+			class="text-(--color-primary) hover:underline"
 			on:click={() => (showEdit = true)}
 		>
 			Edit
@@ -118,17 +121,12 @@
 		/>
 	{/if}
 
-	{#if showToast}
-		<Toast
-			on:undo={()=>{
-				if(deletedNote !== null){
-					const restored = deletedNote;
-					notes.update(n => [restored, ...n]);
-					deletedNote = null;
-				}
-				showToast=false;
-			}}
-		/>
-	{/if}
-
 </div>
+{/if}
+
+{#if showToast}
+	<Toast
+		on:undo={handleUndo}
+		on:timeout={finalizeDelete}
+	/>
+{/if}

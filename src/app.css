@@ -1,3 +1,36 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: var(--color-primary-base);
+  --color-primary-hover: var(--color-primary-hover-base);
+  --color-primary-light: var(--color-primary-light-base);
+}
+
+@layer base {
+  :root {
+    /* Default Blue */
+    --color-primary-base: var(--color-blue-500);
+    --color-primary-hover-base: var(--color-blue-600);
+    --color-primary-light-base: var(--color-blue-100);
+  }
+
+  [data-theme="emerald"] {
+    --color-primary-base: var(--color-emerald-500);
+    --color-primary-hover-base: var(--color-emerald-600);
+    --color-primary-light-base: var(--color-emerald-100);
+  }
+
+  [data-theme="rose"] {
+    --color-primary-base: var(--color-rose-500);
+    --color-primary-hover-base: var(--color-rose-600);
+    --color-primary-light-base: var(--color-rose-100);
+  }
+
+  [data-theme="amber"] {
+    --color-primary-base: var(--color-amber-500);
+    --color-primary-hover-base: var(--color-amber-600);
+    --color-primary-light-base: var(--color-amber-100);
+  }
+}

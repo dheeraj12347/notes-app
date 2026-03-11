@@ -76,7 +76,7 @@
 			</button>
 
 			<button
-				class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition disabled:opacity-50 flex items-center gap-2"
+				class="px-4 py-2 bg-(--color-primary) hover:bg-(--color-primary-hover) text-white rounded-lg transition disabled:opacity-50 flex items-center gap-2"
 				on:click={save}
 				disabled={isSubmitting}
 			>

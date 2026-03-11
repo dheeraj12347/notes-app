@@ -9,6 +9,7 @@
 	import Pagination from "../components/Pagination.svelte";
 	import SortDropdown from "../components/SortDropdown.svelte";
 	import DarkModeToggle from "../components/DarkModeToggle.svelte";
+	import ThemeSwitcher from "../components/ThemeSwitcher.svelte";
 	import LoadingSkeleton from "../components/LoadingSkeleton.svelte";
 
 	async function loadNotes() {
@@ -72,13 +73,16 @@
 						<div class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div> Offline
 					</span>
 				{:else if $syncing}
-					<span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full flex items-center gap-1">
-						<span class="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></span> Syncing
+					<span class="px-3 py-1 bg-(--color-primary-light) text-(--color-primary-hover) text-xs font-semibold rounded-full flex items-center gap-1">
+						<span class="w-3 h-3 border-2 border-(--color-primary) border-t-transparent rounded-full animate-spin"></span> Syncing
 					</span>
 				{/if}
 			</div>
 
-			<DarkModeToggle />
+			<div class="flex items-center gap-1">
+				<ThemeSwitcher />
+				<DarkModeToggle />
+			</div>
 
 		</header>
 
@@ -140,7 +144,7 @@
 			<a
 				href="https://github.com/dheeraj12347"
 				target="_blank"
-				class="underline hover:text-blue-500 transition"
+				class="underline text-(--color-primary) hover:text-(--color-primary-hover) font-semibold transition"
 			>
 				View GitHub Repository
 			</a>

@@ -65,7 +65,7 @@
 		></textarea>
 
 		<button
-			class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg transition disabled:opacity-50 flex items-center gap-2"
+			class="bg-(--color-primary) hover:bg-(--color-primary-hover) text-white px-5 py-2 rounded-lg transition disabled:opacity-50 flex items-center gap-2"
 			disabled={isSubmitting}
 		>
 			{#if isSubmitting}
