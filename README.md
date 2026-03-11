@@ -1,5 +1,4 @@
-# 056300c141a2f72c182fcf7fabb370ea5927afe231f4bc1827255637
-*(SHA-256 Hash of GitHub username "dheeraj12347")*
+
 
 # 📝 Notes App
 
